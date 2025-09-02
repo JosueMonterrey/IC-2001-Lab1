@@ -1,0 +1,289 @@
+#include <iostream>
+
+using namespace std;
+
+// max int o max uint?
+constexpr int MAX_INT = 2147483647;
+
+class Nodo{
+    public:
+    int dato;
+    Nodo * prev;
+    Nodo * next;
+
+    Nodo(const int val){
+        dato = val;
+        prev = next = nullptr;
+    }
+};
+
+class Vector{
+private:
+    int vecSize;
+    int vecMaxSize;
+    Nodo * head;
+    Nodo * tail;
+
+public:
+    Vector(){
+        vecMaxSize = MAX_INT;
+        vecSize = 0;
+        head = tail = nullptr;
+    }
+    Vector(const int size){
+        Vector();
+        vecMaxSize = size;
+    }
+
+    int size(){
+        return vecSize;
+    }
+
+    int max_size(){
+        return vecMaxSize;
+    }
+
+    void resize(const int newSize){
+        if(vecSize <= newSize)
+            vecMaxSize = newSize;
+    }
+
+    void push_back(const int val){
+        if(vecSize >= vecMaxSize)
+            return;
+            
+        Nodo * nuevo = new Nodo(val);
+        
+        if(vecSize == 0){
+            head = tail = nuevo;;
+        }
+        else{
+            nuevo->prev = tail;
+            tail->next = nuevo;
+            tail = nuevo;
+        }
+        vecSize++;
+    }
+
+    int pop_back(){
+        const int val = tail->dato;
+        Nodo * del = tail;
+
+        if(head == tail){
+            head = tail = nullptr;
+        }
+        else{
+            tail->prev->next = nullptr;
+            tail = tail->prev;
+        }
+
+        delete del;
+        vecSize--;
+        return val;
+    }
+
+    void insert(int pos, const int val){
+        if(pos > vecSize - 1)
+            return push_back(val);
+        
+        Nodo * nuevo = new Nodo(val);
+        Nodo * actual = head;
+
+        while(pos--){
+            actual = actual->next;
+        }
+
+        nuevo->prev = actual->prev;
+        nuevo->next = actual;
+        if(actual == head)
+            head = nuevo;
+        else
+            actual->prev->next = nuevo;
+        actual->prev = nuevo;
+
+        vecSize++;
+    }
+
+    void erase(int pos){
+        if(vecSize <= 0)
+            return;
+
+        if(pos >= vecSize - 1){
+            pop_back();
+            return;
+        }
+
+        Nodo * actual = head;
+
+        while(pos--){
+            actual = actual->next;
+        }
+
+        if(actual == head){
+            actual->next->prev = nullptr;
+            head = actual->next;
+        }
+        else{
+            actual->prev->next = actual->next;
+            actual->next->prev = actual->prev;
+        }
+
+        delete actual;
+        vecSize--;
+    }
+
+    void swap(int pos1, int pos2){
+        // hay que revisar si pos1 > pos2?
+        if(vecSize <= 0)
+            return;
+
+        Nodo * nodo1 = head;
+        Nodo * nodo2 = tail;
+        pos2 = vecSize - pos2;
+        while(pos1 || pos2){
+            if(pos1 > 0){
+                nodo1 = nodo1->next;
+                pos1--;
+            }
+            if(pos2 > 0){
+                nodo2 = nodo2->prev;
+                pos2--;
+            }
+        }
+        nodo1->dato ^= nodo2->dato;
+        nodo2->dato ^= nodo1->dato;
+        nodo1->dato ^= nodo2->dato;
+    }
+
+    int& at(int pos){
+        Nodo * actual = head;
+
+        while(pos--){
+            actual = actual->next;
+        }
+
+        return actual->dato;
+    }
+
+    int& operator [](int i){
+        return at(i);
+    }
+
+    int front(){
+        return head->dato;
+    }
+
+    int back(){
+        return tail->dato;
+    }
+
+    void print(){
+        Nodo * actual = head;
+
+        while(actual != nullptr) {
+            // TODO: no sirve ese espacio para separar
+            cout << actual->dato << " ";
+            actual = actual->next;
+        }
+        cout << endl;
+    }
+};
+
+void inicializarVectores (const int n, Vector vectores[]) {
+    for(int i = 0; i < n; i++){
+        int vecSize;
+        cin >> vecSize;
+        if(vecSize == -1)
+            vectores[i] = Vector();
+        else
+            vectores[i] = Vector(vecSize);
+    }
+}
+
+void print(const int& N, Vector * vectores){
+    for(int vecRef = 0; vecRef < N; vecRef++){
+        vectores[vecRef].print();
+    }
+}
+
+int readParam(){
+    int param;
+    cin >> param;
+    return param;
+}
+
+void procesarComando(Vector * vectores, const int& vecRef, const string& comando){
+    if (comando == "sz")
+        cout << vectores[vecRef].size() << endl;
+
+    else if (comando == "msz")
+        cout << vectores[vecRef].max_size() << endl;
+
+    else if (comando == "rsz")
+        vectores[vecRef].resize(readParam());
+
+    else if (comando == "at")
+        vectores[vecRef].at(readParam()); // cout? o no cout?
+
+    else if (comando == "ft")
+        cout << vectores[vecRef].front() << endl;
+
+    else if (comando == "bk") // que rico un whopper
+        cout << vectores[vecRef].back() << endl;
+
+    else if (comando == "pb")
+        vectores[vecRef].push_back(readParam());
+
+    else if (comando == "pbk") // TODO: no estoy seguro si hay que hacer cout
+        cout << vectores[vecRef].pop_back() << endl;
+
+    else if (comando == "in")
+        vectores[vecRef].insert(readParam(), readParam());
+
+    else if (comando == "es")
+        vectores[vecRef].erase(readParam());
+
+    else if (comando == "swp")
+        vectores[vecRef].swap(readParam(), readParam());
+}
+
+
+void procesarLinea(const int& N, Vector * vectores){
+    int vecRef;
+    cin >> vecRef;
+
+    /*
+    > Si cin falla es porque el valor ingresado no era int. Entonces era string, osea que era el comando 'print'.
+
+    > Si ese es el caso se hace clear al estado de error de cin.
+
+    > Además, el texto ingresado que dio error sigue en el buffer. Entonces se hace un while, sacando uno por uno cada
+    caracter hasta encontrar el salto de linea ('\n').
+
+    > Caso contrario, simplemente se procesa el resto de la linea.
+    */
+
+    if(cin.fail()){
+        cin.clear();
+        while(cin.get() != '\n');
+        print(N, vectores);
+    }
+    else{
+        string comando;
+        cin >> comando;
+        procesarComando(vectores, vecRef, comando);
+    }
+}
+
+
+int main(){
+    int N, Q;
+    cin >> N >> Q;
+
+    Vector vectores[N];
+    inicializarVectores(N, vectores);
+    
+    while(Q--){
+        procesarLinea(N, vectores);
+    }
+}
