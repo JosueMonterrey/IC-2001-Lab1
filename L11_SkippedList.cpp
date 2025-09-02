@@ -1,21 +1,22 @@
 #include <iostream>
-#include <random>
+#include <stdlib.h>
+#include <time.h>
 
 using namespace std;
 
 class Moneda {
     private:
-    mt19937 gen;
     int probabilidad;
 
     public:
     Moneda(int prob) {
-        random_device rd;
-        gen = mt19937(rd());
         probabilidad = prob;
+        srand(time(NULL));
     }
 
-    int Tirar() { return gen() & (probabilidad - 1); }
+    int Tirar() {
+        return !(rand() & probabilidad);
+    }
 };
 
 class Nodo {
