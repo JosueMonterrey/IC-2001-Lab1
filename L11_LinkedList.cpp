@@ -68,7 +68,7 @@ int main() {
     int prioridad;
     while (cin >> nombre) {
         if (nombre == "V") {
-            cout << SLL.Pop() << endl;
+            cout << SLL.Pop() << "\n";
         }
         else {
             cin >> prioridad;

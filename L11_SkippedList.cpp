@@ -141,7 +141,7 @@ int main() {
     int prioridad;
     while (cin >> nombre) {
         if (nombre == "V") {
-            cout << SKL.Pop() << endl;
+            cout << SKL.Pop() << "\n";
         }
         else {
             cin >> prioridad;
