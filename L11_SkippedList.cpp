@@ -135,7 +135,7 @@ Nodo * SkipList::PopAux(Nodo * headActual) {
 }
 
 int main() {
-    SkipList SKL(3);
+    SkipList SKL(2);
 
     string nombre;
     int prioridad;
