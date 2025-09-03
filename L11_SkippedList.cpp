@@ -15,7 +15,7 @@ class Moneda {
     }
 
     int Tirar() {
-        return !(rand() & probabilidad);
+        return !(rand() % probabilidad);
     }
 };
 
@@ -135,7 +135,7 @@ Nodo * SkipList::PopAux(Nodo * headActual) {
 }
 
 int main() {
-    SkipList SKL(2);
+    SkipList SKL(3);
 
     string nombre;
     int prioridad;
