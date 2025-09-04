@@ -268,7 +268,10 @@ void procesarLinea(const int& N, Vector * vectores){
 
     if(cin.fail()){
         cin.clear();
-        while(cin.get() != '\n');
+        char c;
+        while(cin.get(c)) {
+            if (c == '\n') break;
+        }
         print(N, vectores);
     }
     else{
