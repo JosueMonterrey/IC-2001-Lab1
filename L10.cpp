@@ -134,23 +134,27 @@ public:
     }
 
     void swap(int pos1, int pos2){
-        // hay que revisar si pos1 > pos2?
         if(vecSize <= 0)
             return;
 
-        Nodo * nodo1 = head;
-        Nodo * nodo2 = tail;
-        pos2 = vecSize - pos2;
-        while(pos1 || pos2){
-            if(pos1 > 0){
-                nodo1 = nodo1->next;
-                pos1--;
-            }
-            if(pos2 > 0){
-                nodo2 = nodo2->prev;
-                pos2--;
-            }
+        if (pos2 < pos1) {
+            pos1 ^= pos2;
+            pos2 ^= pos1;
+            pos1 ^= pos2;
         }
+
+        Nodo * nodo1 = head;
+        while (pos1) {
+            nodo1 = nodo1->next;
+            pos1--;
+        }
+
+        Nodo * nodo2 = nodo1;
+        while (pos2) {
+            nodo2 = nodo2->next;
+            pos2--;
+        }
+
         nodo1->dato ^= nodo2->dato;
         nodo2->dato ^= nodo1->dato;
         nodo1->dato ^= nodo2->dato;
@@ -186,7 +190,7 @@ public:
             cout << actual->dato << " ";
             actual = actual->next;
         }
-        cout << endl;
+        cout << "\n";
     }
 };
 
