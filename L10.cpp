@@ -31,8 +31,9 @@ public:
         head = tail = nullptr;
     }
     Vector(const int size){
-        Vector();
         vecMaxSize = size;
+        vecSize = 0;
+        head = tail = nullptr;
     }
 
     int size(){
@@ -234,7 +235,7 @@ void procesarComando(Vector * vectores, const int& vecRef, const string& comando
     else if (comando == "pb")
         vectores[vecRef].push_back(readParam());
 
-    else if (comando == "pbk") // TODO: no estoy seguro si hay que hacer cout
+    else if (comando == "pbk")
         cout << vectores[vecRef].pop_back() << endl;
 
     else if (comando == "in")
