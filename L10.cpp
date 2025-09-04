@@ -2,7 +2,6 @@
 
 using namespace std;
 
-// max int o max uint?
 constexpr int MAX_INT = 2147483647;
 
 class Nodo{
@@ -186,7 +185,6 @@ public:
         Nodo * actual = head;
 
         while(actual != nullptr) {
-            // TODO: no sirve ese espacio para separar
             cout << actual->dato << " ";
             actual = actual->next;
         }
@@ -219,28 +217,28 @@ int readParam(){
 
 void procesarComando(Vector * vectores, const int& vecRef, const string& comando){
     if (comando == "sz")
-        cout << vectores[vecRef].size() << endl;
+        cout << vectores[vecRef].size() << "\n";
 
     else if (comando == "msz")
-        cout << vectores[vecRef].max_size() << endl;
+        cout << vectores[vecRef].max_size() << "\n";
 
     else if (comando == "rsz")
         vectores[vecRef].resize(readParam());
 
     else if (comando == "at")
-        vectores[vecRef].at(readParam()); // cout? o no cout?
+        cout << vectores[vecRef][readParam()] << "\n";
 
     else if (comando == "ft")
-        cout << vectores[vecRef].front() << endl;
+        cout << vectores[vecRef].front() << "\n";
 
     else if (comando == "bk") // que rico un whopper
-        cout << vectores[vecRef].back() << endl;
+        cout << vectores[vecRef].back() << "\n";
 
     else if (comando == "pb")
         vectores[vecRef].push_back(readParam());
 
     else if (comando == "pbk")
-        cout << vectores[vecRef].pop_back() << endl;
+        cout << vectores[vecRef].pop_back() << "\n";
 
     else if (comando == "in")
         vectores[vecRef].insert(readParam(), readParam());
